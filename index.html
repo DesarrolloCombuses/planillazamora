@@ -23,7 +23,24 @@
     .toolbar .form-control{ background:var(--card); color:var(--text); border:1px solid var(--border); }
     .spinner{ width:14px; height:14px; border:2px solid var(--border); border-top-color:var(--accent); border-radius:50%; animation:spin .8s linear infinite; display:inline-block; vertical-align:text-bottom; }
     @keyframes spin{ to{ transform:rotate(360deg)} }
-    @media (max-width: 576px){ .toolbar{ width:100%; gap:.5rem } .toolbar>*{ width:100% } .toolbar .btn-group,.toolbar .dropdown-menu{ width:100% } }
+
+    /* ======= Mejora UI móvil / táctil ======= */
+    html { font-size:16px; }
+    @media (max-width: 576px){
+      html { font-size:18px; }
+      body { line-height:1.35; }
+      .container{ padding-left:12px; padding-right:12px; }
+      .card{ width:100%; border-radius:1rem; padding:1rem !important; }
+      .stat .k{ font-size:1.35rem; } .stat .t{ font-size:1rem; }
+      .toolbar{ display:flex; flex-direction:column; align-items:stretch; gap:.5rem; }
+      .toolbar > *{ width:100% !important; } .toolbar .btn-group,.toolbar .dropdown-menu{ width:100%; }
+      .nav-pills .nav-link{ padding:.6rem 1rem; font-size:1rem; border-radius:.75rem; }
+      .table-sm td,.table-sm th{ padding:.8rem .75rem; font-size:1rem; }
+      .form-control,.form-select{ padding:.7rem .9rem; font-size:1rem; border-radius:.65rem; }
+      button.btn.btn-primary{ padding:.8rem 1rem; font-size:1.05rem; border-radius:.8rem; }
+      #pager .btn{ padding:.6rem .9rem; font-size:1rem; }
+    }
+    #historicoCard,.card{ max-width:none; }
   </style>
 </head>
 <body>
@@ -39,29 +56,25 @@
 
   <!-- FORM -->
   <div class="card shadow p-4">
-    <form id="formPerdidos" class="row g-3">
+    <form id="formPerdidos" class="row g-3" autocomplete="off">
       <div class="col-md-3">
         <label class="form-label required">FECHA</label>
         <input type="date" name="FECHA" id="fechaInput" class="form-control" required>
       </div>
-
       <div class="col-md-2">
         <label class="form-label required">VH</label>
         <select name="VH" id="vhSelect" class="form-select" required>
           <option value="">SELECCIONE...</option>
         </select>
       </div>
-
       <div class="col-md-3">
         <label class="form-label required">PLACA</label>
         <input type="text" name="PLACA" id="placaInput" class="form-control" readonly required>
       </div>
-
       <div class="col-md-2">
         <label class="form-label required">TABLA</label>
         <input type="text" name="TABLA" class="form-control" required>
       </div>
-
       <div class="col-md-2">
         <label class="form-label required">V.REALIZADOS</label>
         <input type="number" inputmode="numeric" name="V.REALIZADOS" class="form-control" required>
@@ -69,45 +82,42 @@
 
       <!-- categorías de perdidos -->
       <div class="col-md-2">
-        <label class="form-label ">PERDIDOS TALLER</label>
+        <label class="form-label">PERDIDOS TALLER</label>
         <input type="number" inputmode="numeric" name="VIAJES PERDIDOS TALLER" class="form-control perd" value="0" required>
       </div>
       <div class="col-md-2">
-        <label class="form-label ">PERDIDOS RESTRICCIÓN</label>
+        <label class="form-label">PERDIDOS RESTRICCIÓN</label>
         <input type="number" inputmode="numeric" name="VIAJES PERDIDOS RESTRICCION" class="form-control perd" value="0" required>
       </div>
       <div class="col-md-2">
-        <label class="form-label ">PERDIDOS INASISTENCIA</label>
+        <label class="form-label">PERDIDOS INASISTENCIA</label>
         <input type="number" inputmode="numeric" name="VIAJES PERDIDOS INASISTENCIA" class="form-control perd" value="0" required>
       </div>
       <div class="col-md-2">
-        <label class="form-label ">PERDIDOS EPS</label>
+        <label class="form-label">PERDIDOS EPS</label>
         <input type="number" inputmode="numeric" name="VIAJES PERDIDOS EPS" class="form-control perd" value="0" required>
       </div>
       <div class="col-md-2">
-        <label class="form-label ">PERDIDOS PERMISO</label>
+        <label class="form-label">PERDIDOS PERMISO</label>
         <input type="number" inputmode="numeric" name="VIAJES PERDIDOS PERMISO" class="form-control perd" value="0" required>
       </div>
-
       <div class="col-md-2">
         <label class="form-label required">PERDIDOS TOTAL</label>
         <input type="number" inputmode="numeric" name="VIAJES PERDIDOS TOTAL" id="perdidosTotal" class="form-control" readonly required>
       </div>
 
-      <!-- aquí el conductor por LISTA (desde CSV de operadores) -->
+      <!-- Conductor desde hoja -->
       <div class="col-md-4">
         <label class="form-label required">NOMBRE DE CONDUCTOR</label>
         <select name="NOMBRE DE CONDUCTOR" id="conductorSelect" class="form-select" required>
           <option value="">CARGANDO...</option>
         </select>
       </div>
-
       <div class="col-md-8">
-        <label class="form-label ">OBSERVACIONES</label>
+        <label class="form-label">OBSERVACIONES</label>
         <input type="text" name="OBSERVACIONES" class="form-control" required>
       </div>
 
-      <!-- nuevos campos del gestor -->
       <div class="col-md-3">
         <label class="form-label required">TURNO DEL GESTOR</label>
         <select name="TURNO DEL GESTOR" id="turnoGestor" class="form-select" required>
@@ -139,7 +149,7 @@
   <!-- HISTÓRICO -->
   <div class="card shadow p-4 mt-4" id="historicoCard">
     <div class="d-flex flex-wrap align-items-center justify-content-between mb-2 gap-2">
-      <h5 class="mb-0">📡 Registros guardados </h5>
+      <h5 class="mb-0">📡 Registros guardados</h5>
       <div class="d-flex align-items-center gap-2 toolbar">
         <input id="searchInput" type="text" class="form-control form-control-sm" placeholder="Buscar en histórico" style="min-width:260px;">
         <button class="btn btn-outline-secondary btn-sm" id="btnClear">Limpiar</button>
@@ -185,166 +195,172 @@
   </div>
 </div>
 
+<!-- Toast Bootstrap -->
+<div class="position-fixed bottom-0 start-50 translate-middle-x p-3" style="z-index:1100">
+  <div id="toast" class="toast align-items-center text-bg-success border-0" role="alert">
+    <div class="d-flex">
+      <div id="toastMsg" class="toast-body">OK</div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+    </div>
+  </div>
+</div>
+
 <script>
-  // ====== CONFIG ======
-  const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSkh6d3hHr5KmoQ0UnJeq5rUXM0f0sFX47bruYnh2l18K5SyllFTNtcHkBfCkvJ9STcXPxJ-_kpYJG8/pub?gid=0&single=true&output=csv"; // tu hoja publicada
-  const OPERADORES_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTxobSTH8gBQMR9l1dZ77NX_EhCon4PkkACLRIjQbRwAVDpka-6O91tYh_q_dqexkvPB-GWgIed_8Ht/pub?gid=1867799695&single=true&output=csv"; // lista de operadores
-  const WEBHOOK_URL = "https://connect.pabbly.com/workflow/sendwebhookdata/IjU3NjYwNTY1MDYzNjA0MzY1MjZmNTUzNzUxM2Ei_pc";
+  /* ================== CONFIG (cambia solo esto) ================== */
+  const WEB_APP_URL   = "https://script.google.com/macros/s/AKfycbzOiae29CImB1TTXq2ph6SEm-QeVkKGNqc8-w1eGH7LHxuQwC99tCuz_hMjUg_3B-fT/exec"; // <-- tu Apps Script desplegado
+  const HIST_SHEET_ID = "1vjqWE4AxYmTK7SgQw68OqP4OPT651uXcmrnEzfAyq2s";
+  const HIST_SHEET_TAB= "resumen zamora";
 
-  const AUTO_REFRESH_MS = 15000, POLL_CONFIRM_MS=20000, POLL_INTERVAL_MS=2000, PAGE_SIZE_HIST=100;
+  const COND_ID   = "1D_InxpCqqM4qzoWiDV4MZt-7dpmmMxdwCZotjpGDaME";
+  const COND_TAB  = "Conductores urbanos";
 
-  // VH -> PLACA (derivado de tu CSV)
+  // Endpoints a Apps Script
+  const OPERADORES_URL = `${WEB_APP_URL}?format=json&id=${COND_ID}&sheet=${encodeURIComponent(COND_TAB)}`;
+  const HISTORICO_URL  = `${WEB_APP_URL}?format=csv&id=${HIST_SHEET_ID}&sheet=${encodeURIComponent(HIST_SHEET_TAB)}`;
+  const GAS_EXEC_URL   = WEB_APP_URL;
+
+  const AUTO_REFRESH_MS=15000, POLL_CONFIRM_MS=20000, POLL_INTERVAL_MS=2000, PAGE_SIZE_HIST=100;
+
+  // VH -> PLACA
   const vehPlacaMap = {"17":"EQR993","25":"SMT896","30":"EQT486","85":"TSH519","101":"WDX404","108":"EQS995","113":"EQT504","114":"TSJ401","134":"EQW271","156":"SMV802","183":"STV612","185":"TSG893","187":"TSI191","188":"EQW431","189":"TSE779","190":"SMT664","192":"TPU783","193":"TSG527","194":"TPV338","195":"TSE553","198":"TSH271","216":"STW894","217":"FWK177","223":"SMT831","237":"TSI855","238":"STV611","239":"TSI641","243":"TPV865","266":"WPT149","269":"TSI732","305":"SMU568"};
   const VEH_LIST = Object.keys(vehPlacaMap).sort((a,b)=>parseInt(a)-parseInt(b));
 
-  // ====== Helpers ======
+  /* ================== Helpers/estado ================== */
   const pad=n=>String(n).padStart(2,'0');
   const normKey=s=>(s||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-zA-Z0-9]/g,"").toLowerCase();
   function formatDMY(iso){ if(!iso) return ""; const [y,m,d]=iso.split("-"); return `${pad(d)}/${pad(m)}/${y}`; }
   function nowDMYHMS(){ const t=new Date(); return `${pad(t.getDate())}/${pad(t.getMonth()+1)}/${t.getFullYear()} ${pad(t.getHours())}:${pad(t.getMinutes())}:${pad(t.getSeconds())}`; }
-
-  // CORS fallbacks (para abrir desde WhatsApp/file://)
-  async function fetchTextCORS(url){
-    const bust=url+(url.includes("?")?"&":"?")+"cachebust="+Date.now();
-    try{const r=await fetch(bust,{cache:"no-store",mode:"cors"}); if(!r.ok) throw 0; return await r.text();}catch(e){}
-    try{const r=await fetch("https://api.allorigins.win/raw?url="+encodeURIComponent(bust),{cache:"no-store"}); if(!r.ok) throw 0; return await r.text();}catch(e){}
-    try{const clean=bust.replace(/^https?:\/\//,"").replace(/^\/\//,""); const r=await fetch("https://r.jina.ai/http://"+clean,{cache:"no-store"}); if(!r.ok) throw 0; return await r.text();}catch(e){}
-    throw new Error("No se pudo descargar: "+url);
-  }
-
-  // ====== Estado ======
   let remoto=[], headersRemotos=[], activeRange="hoy", searchQuery="", sortKey=null, sortDir=1, currentPage=1, autoRefreshTimer=null, syncing=false;
 
-  // ====== Modo oscuro ======
+  // Modo oscuro
   (function(){const t=document.getElementById("darkToggle"); const apply=()=>{const d=localStorage.getItem("darkMode")==="1"; document.body.classList.toggle("dark",d); t.checked=d;}; t.addEventListener("change",()=>{localStorage.setItem("darkMode",t.checked?"1":"0"); apply();}); apply();})();
 
-  // ====== Cargar conductores desde OPERADORES_CSV_URL ======
-  async function cargarConductores() {
-    const sel = document.getElementById("conductorSelect");
-    const norm = s => (s||"").replace(/^\uFEFF/,"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").trim().toLowerCase();
-    try {
-      const csvText = await fetchTextCORS(OPERADORES_CSV_URL);
-      const first = (csvText.split(/\r?\n/)[0]||"");
-      const sep = (first.split(";").length>first.split(",").length) ? ";" : ",";
-      const lines = csvText.split(/\r?\n/).filter(l=>l.trim()!=="");
-      if(!lines.length) throw new Error("CSV vacío");
-      const headersRaw = lines[0].split(sep);
-      const headers = headersRaw.map(h=>norm(h));
-      const idxNombre = headers.findIndex(h=>h.includes("nombre"));
-      if(idxNombre===-1){ sel.innerHTML='<option value="">NO SE ENCONTRÓ COLUMNA NOMBRE</option>'; return; }
-      const values=[];
-      for(let i=1;i<lines.length;i++){ const cols=lines[i].split(sep); const v=(cols[idxNombre]??"").trim(); if(v) values.push(v.toUpperCase()); }
-      const unicos=[...new Set(values)];
-      sel.innerHTML='<option value="">SELECCIONE...</option>';
-      unicos.forEach(v=>{ const o=document.createElement("option"); o.value=v; o.textContent=v; sel.appendChild(o); });
-      if(!unicos.length) sel.innerHTML='<option value="">SIN FILAS EN LA HOJA</option>';
-    } catch (err) {
-      console.error("Error cargando conductores:", err);
-      sel.innerHTML='<option value="">ERROR CARGANDO LISTA</option>';
-    }
+  // Toast
+  function showToast(msg, ok=true){
+    const el=document.getElementById("toast");
+    document.getElementById("toastMsg").textContent=msg;
+    el.classList.toggle("text-bg-success", ok);
+    el.classList.toggle("text-bg-danger", !ok);
+    new bootstrap.Toast(el,{delay:2500}).show();
   }
 
-  // ====== VH / PLACA ======
-  (function fillVH(){ const sel=document.getElementById("vhSelect"); VEH_LIST.forEach(v=>{const o=document.createElement("option"); o.value=v; o.textContent=v; sel.appendChild(o);}); document.getElementById("statTotalVeh").textContent=VEH_LIST.length; })();
-  document.getElementById("vhSelect").addEventListener("change", function(){ document.getElementById("placaInput").value = vehPlacaMap[this.value] || ""; checkDuplicadoUI(); });
+  // Conductores (JSON vía GAS)
+  async function cargarConductores(){
+    const sel=document.getElementById("conductorSelect");
+    try{
+      const r=await fetch(OPERADORES_URL,{mode:"cors",cache:"no-store"});
+      const data=await r.json();
+      const headers=Object.keys(data[0]||{});
+      const keyNombre=headers.find(h=>h.toLowerCase().includes("nombre"));
+      if(!keyNombre){ sel.innerHTML='<option value="">NO SE ENCONTRÓ COLUMNA NOMBRE</option>'; return; }
+      const nombres=[...new Set(data.map(row=>(row[keyNombre]||"").toString().trim().toUpperCase()))]
+        .filter(Boolean).sort((a,b)=>a.localeCompare(b,'es',{sensitivity:'base'}));
+      sel.innerHTML='<option value="">SELECCIONE...</option>'+nombres.map(n=>`<option value="${n}">${n}</option>`).join("");
+    }catch(e){ console.error(e); sel.innerHTML='<option value="">ERROR CARGANDO LISTA</option>'; }
+  }
 
-  // ====== Perdidos total ======
-  function calcPerdidosTotal(){ const sum=[...document.querySelectorAll(".perd")].reduce((a,i)=>a+(parseFloat(i.value||"0")||0),0); document.getElementById("perdidosTotal").value=sum; }
-  document.querySelectorAll(".perd").forEach(i=> i.addEventListener("input", calcPerdidosTotal)); calcPerdidosTotal();
+  // Histórico (CSV vía GAS)
+  async function cargarRemoto(){
+    try{
+      const txt = await (await fetch(HISTORICO_URL,{mode:"cors",cache:"no-store"})).text();
+      const parsed=Papa.parse(txt,{header:true,skipEmptyLines:true});
+      headersRemotos=parsed.meta.fields||Object.keys(parsed.data[0]||{});
+      remoto=parsed.data.map(r=>{const o={}; headersRemotos.forEach(h=>o[h]=r[h]??""); return o;});
+    }catch(e){ console.warn("Histórico no disponible:",e); headersRemotos=[]; remoto=[]; }
+  }
 
-  // ====== Histórico ======
-  async function cargarRemoto(){ if(!SHEET_CSV_URL) return; try{ const text=await fetchTextCORS(SHEET_CSV_URL); const parsed=Papa.parse(text,{header:true,skipEmptyLines:true}); headersRemotos=parsed.meta.fields||Object.keys(parsed.data[0]||{}); remoto=parsed.data.map(r=>{const o={}; headersRemotos.forEach(h=>o[h]=(r[h]??"")); return o;}); }catch(e){ console.warn("Histórico no disponible:", e); } }
+  // Tabla/UI
   function fechaToDate(v){ const f=(v||"").toString().trim(); const [d,m,y]=f.split("/"); if(!d||!m||!y) return null; return new Date(`${y}-${m}-${d}T00:00:00`); }
   function colFecha(){ return headersRemotos.find(h=>normKey(h)==="fecha"); }
   function colVH(){ return headersRemotos.find(h=>normKey(h)==="vh"); }
   function filtrarPorRango(){ if(!headersRemotos.length) return []; const hoy=new Date(); hoy.setHours(0,0,0,0); let desde=new Date(hoy); if(activeRange==="semana") desde.setDate(hoy.getDate()-7); if(activeRange==="mes") desde.setDate(hoy.getDate()-30); const hF=colFecha(); if(!hF) return remoto.slice(); if(activeRange==="historico") return remoto.slice(); return remoto.filter(r=>{ const d=fechaToDate(r[hF]); if(!d) return false; if(activeRange==="hoy") return d.getTime()===hoy.getTime(); return d>=desde; }); }
-  function filtrarPorBusqueda(rows){ const q=searchQuery.trim().toUpperCase(); if(!q) return rows; return rows.filter(r=> Object.values(r).some(v=>(v||"").toString().toUpperCase().includes(q)) ); }
+  function filtrarPorBusqueda(rows){ const q=searchQuery.trim().toUpperCase(); if(!q) return rows; return rows.filter(r=>Object.values(r).some(v=>(v||"").toString().toUpperCase().includes(q))); }
   function ordenarRows(rows){ if(!sortKey) return rows; const dir=sortDir; return rows.slice().sort((a,b)=>{ const av=(a[sortKey]??"").toString(), bv=(b[sortKey]??"").toString(); const an=parseFloat(av.replace(",",".")), bn=parseFloat(bv.replace(",",".")); const num=!isNaN(an)&&!isNaN(bn); return (num?(an-bn):av.localeCompare(bv,'es',{numeric:true,sensitivity:'base'}))*dir; }); }
-  function paginateRows(rows){ if(activeRange!=="historico"){ document.getElementById("pager").style.display="none"; return rows; } const total=rows.length, pages=Math.max(1,Math.ceil(total/PAGE_SIZE_HIST)); if(currentPage>pages) currentPage=pages; const s=(currentPage-1)*PAGE_SIZE_HIST; const e=s+PAGE_SIZE_HIST; document.getElementById("pager").style.display="flex"; document.getElementById("pagerInfo").textContent=`Página ${currentPage} de ${pages} · ${total} filas`; document.getElementById("prevPage").disabled=currentPage===1; document.getElementById("nextPage").disabled=currentPage===pages; return rows.slice(s,e); }
-  function renderRemoto(){ const thead=document.getElementById("theadRemoto"), tbody=document.getElementById("tbodyRemoto"); thead.innerHTML=""; tbody.innerHTML=""; if(!headersRemotos.length){ thead.innerHTML="<tr><th>Sin datos</th></tr>"; return; } const trh=document.createElement("tr"); headersRemotos.forEach(h=>{ const th=document.createElement("th"); th.textContent=h; const span=document.createElement("span"); span.className="ms-1 text-muted"; if(sortKey===h) span.textContent=sortDir===1?"▲":"▼"; th.appendChild(span); th.addEventListener("click",()=>{ if(sortKey===h) sortDir=-sortDir; else { sortKey=h; sortDir=1; } currentPage=1; renderRemoto(); }); trh.appendChild(th); }); thead.appendChild(trh); const rows=paginateRows( ordenarRows( filtrarPorBusqueda( filtrarPorRango() ) ) ); const frag=document.createDocumentFragment(); rows.forEach(r=>{ const tr=document.createElement("tr"); headersRemotos.forEach(h=>{ const td=document.createElement("td"); td.textContent=r[h]??""; tr.appendChild(td); }); frag.appendChild(tr); }); tbody.appendChild(frag); }
+  function paginateRows(rows){ if(activeRange!=="historico"){ document.getElementById("pager").style.display="none"; return rows; } const total=rows.length, pages=Math.max(1,Math.ceil(total/PAGE_SIZE_HIST)); if(currentPage>pages) currentPage=pages; const s=(currentPage-1)*PAGE_SIZE_HIST, e=s+PAGE_SIZE_HIST; document.getElementById("pager").style.display="flex"; document.getElementById("pagerInfo").textContent=`Página ${currentPage} de ${pages} · ${total} filas`; document.getElementById("prevPage").disabled=currentPage===1; document.getElementById("nextPage").disabled=currentPage===pages; return rows.slice(s,e); }
+  function renderRemoto(){ const thead=document.getElementById("theadRemoto"), tbody=document.getElementById("tbodyRemoto"); thead.innerHTML=""; tbody.innerHTML=""; if(!headersRemotos.length){ thead.innerHTML="<tr><th>Sin datos</th></tr>"; return; } const trh=document.createElement("tr"); headersRemotos.forEach(h=>{ const th=document.createElement("th"); th.textContent=h; const span=document.createElement("span"); span.className="ms-1 text-muted"; if(sortKey===h) span.textContent=sortDir===1?"▲":"▼"; th.appendChild(span); th.addEventListener("click",()=>{ if(sortKey===h) sortDir=-sortDir; else{ sortKey=h; sortDir=1; } currentPage=1; renderRemoto(); }); trh.appendChild(th); }); thead.appendChild(trh); const rows=paginateRows( ordenarRows( filtrarPorBusqueda( filtrarPorRango() ) ) ); const frag=document.createDocumentFragment(); rows.forEach(r=>{ const tr=document.createElement("tr"); headersRemotos.forEach(h=>{ const td=document.createElement("td"); td.textContent=r[h]??""; tr.appendChild(td); }); frag.appendChild(tr); }); tbody.appendChild(frag); }
 
-  // ====== Stats / duplicado ======
+  // Stats / duplicado
   function actualizarStats(){ const f=formatDMY(document.getElementById("fechaInput").value); const hF=colFecha(); let hechos=0; if(hF) hechos=remoto.filter(r=>(r[hF]||"").trim()===f).length; document.getElementById("statHechos").textContent=hechos; document.getElementById("statTotalVeh").textContent=VEH_LIST.length; document.getElementById("statFaltan").textContent=Math.max(0,VEH_LIST.length-hechos); }
   function existeRegistro(fechaDDMMYYYY, vh){ const hF=colFecha(), hV=colVH(); if(!hF||!hV) return false; return remoto.some(r=> (r[hF]||"")===fechaDDMMYYYY && (r[hV]||"")===vh ); }
   function checkDuplicadoUI(){ const f=formatDMY(document.getElementById("fechaInput").value); const v=document.getElementById("vhSelect").value; const ya=existeRegistro(f,v); document.getElementById("dupInfo").classList.toggle("d-none", !(f&&v&&ya)); return ya; }
-  document.getElementById("fechaInput").addEventListener("change", ()=>{ actualizarStats(); checkDuplicadoUI(); });
 
-  // ====== Auto refresh ======
+  // Auto refresh & toolbar
   function startAutoRefresh(){ stopAutoRefresh(); autoRefreshTimer=setInterval(async()=>{ if(document.hidden||syncing) return; await cargarRemoto(); renderRemoto(); actualizarStats(); }, AUTO_REFRESH_MS); }
   function stopAutoRefresh(){ if(autoRefreshTimer) clearInterval(autoRefreshTimer); autoRefreshTimer=null; }
   document.addEventListener("visibilitychange", ()=>{ if(!document.hidden) startAutoRefresh(); });
-
-  // ====== Toolbar / tabs / export ======
   document.getElementById("searchInput").addEventListener("input", e=>{ searchQuery=e.target.value; currentPage=1; renderRemoto(); });
   document.getElementById("btnClear").addEventListener("click", ()=>{ document.getElementById("searchInput").value=""; searchQuery=""; currentPage=1; renderRemoto(); });
   document.getElementById("prevPage").addEventListener("click", ()=>{ if(currentPage>1){ currentPage--; renderRemoto(); } });
   document.getElementById("nextPage").addEventListener("click", ()=>{ currentPage++; renderRemoto(); });
   document.querySelectorAll("#tabsRango .nav-link").forEach(b=> b.addEventListener("click", e=>{ document.querySelectorAll("#tabsRango .nav-link").forEach(x=>x.classList.remove("active")); e.target.classList.add("active"); activeRange=e.target.dataset.range; currentPage=1; renderRemoto(); }));
 
-  function rowsFiltradosCompleto(){ return ordenarRows( filtrarPorBusqueda( filtrarPorRango() ) ); }
-  function rowsPaginaActual(){ if(activeRange!=="historico") return rowsFiltradosCompleto(); const full=rowsFiltradosCompleto(); const s=(currentPage-1)*PAGE_SIZE_HIST; return full.slice(s, s+PAGE_SIZE_HIST); }
-  function exportToCSV(rows, filename){ const csv=Papa.unparse(rows,{columns:headersRemotos}); const blob=new Blob([csv],{type:"text/csv;charset=utf-8;"}); const url=URL.createObjectURL(blob); const a=document.createElement("a"); a.href=url; a.download=filename; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url); }
-  function exportToXLSX(rows, filename){ const ws=XLSX.utils.json_to_sheet(rows,{header:headersRemotos}); const wb=XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "Datos"); XLSX.writeFile(wb, filename); }
-  document.getElementById("exportCsvPage").addEventListener("click", e=>{ e.preventDefault(); exportToCSV(rowsPaginaActual(), "vista_pagina.csv"); });
-  document.getElementById("exportCsvAll").addEventListener("click", e=>{ e.preventDefault(); exportToCSV(rowsFiltradosCompleto(), "vista_filtrada.csv"); });
-  document.getElementById("exportXlsxPage").addEventListener("click", e=>{ e.preventDefault(); exportToXLSX(rowsPaginaActual(), "vista_pagina.xlsx"); });
-  document.getElementById("exportXlsxAll").addEventListener("click", e=>{ e.preventDefault(); exportToXLSX(rowsFiltradosCompleto(), "vista_filtrada.xlsx"); });
+  // Perdidos total
+  function calcPerdidosTotal(){ const sum=[...document.querySelectorAll(".perd")].reduce((a,i)=>a+(parseFloat(i.value||"0")||0),0); document.getElementById("perdidosTotal").value=sum; }
+  document.querySelectorAll(".perd").forEach(i=> i.addEventListener("input", calcPerdidosTotal)); calcPerdidosTotal();
 
-  // ====== Envío ======
+  // VH / PLACA
+  (function fillVH(){ const sel=document.getElementById("vhSelect"); VEH_LIST.forEach(v=>{const o=document.createElement("option"); o.value=v; o.textContent=v; sel.appendChild(o);}); document.getElementById("statTotalVeh").textContent=VEH_LIST.length; })();
+  document.getElementById("vhSelect").addEventListener("change", function(){ document.getElementById("placaInput").value=vehPlacaMap[this.value]||""; checkDuplicadoUI(); });
+  document.getElementById("fechaInput").addEventListener("change", ()=>{ actualizarStats(); checkDuplicadoUI(); });
+
+  // Envío directo a GAS
   document.getElementById("formPerdidos").addEventListener("submit", async (e)=>{
     e.preventDefault();
     const form=e.currentTarget;
     if(!form.reportValidity()) return;
 
-    // total = suma de categorías
-    const suma=[...document.querySelectorAll(".perd")].reduce((a,i)=>a+(parseFloat(i.value||"0")||0),0);
-    document.getElementById("perdidosTotal").value=suma;
-
-    if (checkDuplicadoUI()){ alert("⚠️ Ya existe un registro para ese VH en la fecha seleccionada."); return; }
+    calcPerdidosTotal();
+    if (checkDuplicadoUI()){ showToast("Ya existe ese VH en la fecha.", false); return; }
 
     let data = Object.fromEntries(new FormData(form).entries());
     data["FECHA"] = formatDMY(data["FECHA"]);
     data["FECHA_HORA_ACCION"] = nowDMYHMS();
     for (let k in data){ if (typeof data[k]==="string" && k!=="FECHA" && k!=="FECHA_HORA_ACCION"){ if(isNaN(data[k])) data[k]=data[k].toUpperCase(); } }
 
-    try{
-      await fetch(WEBHOOK_URL, { method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify(data) });
+    const payload = {
+      id: HIST_SHEET_ID,
+      sheet: HIST_SHEET_TAB,
+      row: data
+    };
 
+    try{
+      const r = await fetch(GAS_EXEC_URL, {
+        method:"POST",
+        mode:"cors",
+        headers:{ "Content-Type":"text/plain;charset=utf-8" }, // evita preflight
+        body: JSON.stringify(payload)
+      });
+      const res = await r.json();
+      if(!res.ok) throw new Error(res.error||"Fallo al insertar");
+
+      // inserción optimista
       if(headersRemotos.length){ const row={}; headersRemotos.forEach(h=> row[h]= data[h] ?? "" ); remoto.unshift(row); renderRemoto(); actualizarStats(); }
 
-      if(SHEET_CSV_URL){
-        const fecha=data["FECHA"], vh=data["VH"];
-        const sync=document.getElementById("syncInfo"); syncing=true; sync.classList.remove("d-none");
-        const start=Date.now();
-        while(Date.now()-start < POLL_CONFIRM_MS){
-          await new Promise(r=>setTimeout(r,POLL_INTERVAL_MS));
-          await cargarRemoto(); renderRemoto(); actualizarStats();
-          if (existeRegistro(fecha, vh)) break;
-        }
-        syncing=false; sync.classList.add("d-none");
+      // confirmación rápida
+      const fecha=data["FECHA"], vh=data["VH"];
+      const sync=document.getElementById("syncInfo"); syncing=true; sync.classList.remove("d-none");
+      const start=Date.now();
+      while(Date.now()-start < POLL_CONFIRM_MS){
+        await new Promise(r=>setTimeout(r,POLL_INTERVAL_MS));
+        await cargarRemoto(); renderRemoto(); actualizarStats();
+        if (existeRegistro(fecha, vh)) break;
       }
-      alert("✅ Registro enviado correctamente");
-    }catch(err){
-      console.error(err); alert("❌ Error enviando al Webhook");
-    }
+      syncing=false; sync.classList.add("d-none");
 
-    form.reset(); document.getElementById("placaInput").value="";
+      showToast("Registro guardado ✅", true);
+      form.reset(); document.getElementById("placaInput").value="";
+    }catch(err){
+      console.error(err); showToast("Error guardando ❌", false);
+    }
   });
 
-  // ====== Init ======
+  // Init
   (async function init(){
-    // VH
-    const selVH=document.getElementById("vhSelect");
-    VEH_LIST.forEach(v=>{ const o=document.createElement("option"); o.value=v; o.textContent=v; selVH.appendChild(o); });
-    document.getElementById("statTotalVeh").textContent=VEH_LIST.length;
-
-    // Conductores (desde operadores)
     await cargarConductores();
-
-    // Histórico
     await cargarRemoto(); renderRemoto(); actualizarStats(); startAutoRefresh();
   })();
 </script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
+
